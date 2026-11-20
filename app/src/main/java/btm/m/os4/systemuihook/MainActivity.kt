@@ -254,7 +254,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.statusBarColor = Color.TRANSPARENT
         window.navigationBarColor = Color.TRANSPARENT
-        setContent { Root(hookStore, navigationStore, lockscreenCapsuleStore, cameraStore, deviceProfileStore, appearanceStore, airDropStore) }
+        setContent { LiquidBarApp() }
     }
 
     override fun onStart() {
