@@ -1700,7 +1700,7 @@ object AppBottomNavHooks {
                                     config.packageName == InstagramNavigation.PACKAGE || config === pinterest,
                                 softBackdropShadow = config === tencentMeeting,
                                 suppressFloatingShadow = config === whatsapp,
-                                liquidBottomSpacingDp = if (config === xiaomiWallet) -8 else if (config === whatsapp) -16 else 8,
+                                liquidBottomSpacingDp = if (config === xiaomiWallet) -8 else 8,
                                 liquidBarWidthFraction = 1f,
                                 liquidBarAlignment = androidx.compose.ui.Alignment.BottomCenter,
                                 concealHostBottomBar = config.concealHostBottomBar ||
@@ -2700,8 +2700,6 @@ object AppBottomNavHooks {
                 val home = findResourceView(content, "tabView") ?: return
                 val pager = findResourceView(home, "viewPager") as? ViewGroup ?: return
                 releaseTencentMeetingPageNavigationInset(pager)
-            } else if (config === whatsapp) {
-                releaseWhatsAppPageNavigationInset(content)
             } else if (config === wechat) {
                 releaseWeChatPageNavigationInset(content)
             } else if (config === qq) {
@@ -3062,7 +3060,7 @@ object AppBottomNavHooks {
 
         private fun offsetWhatsAppFabs(content: ViewGroup) {
             val density = content.resources.displayMetrics.density
-            val fabOffset = -(16f * density)
+            val fabOffset = -(84f * density)
             val fab = findResourceView(content, "fab")
             if (fab != null && fab.translationY != fabOffset) {
                 fab.translationY = fabOffset
@@ -3070,28 +3068,6 @@ object AppBottomNavHooks {
             val miniFab = findResourceView(content, "extended_mini_fab")
             if (miniFab != null && miniFab.translationY != fabOffset) {
                 miniFab.translationY = fabOffset
-            }
-        }
-
-        private fun releaseWhatsAppPageNavigationInset(content: ViewGroup) {
-            val inset = navigationBarInset()
-            if (inset <= 0) return
-            descendants(content).forEach { view ->
-                if (!view.isShown || view is ComposeView || view === originalBar ||
-                    view.height < inset * 4 || view.width < content.width * 3 / 4
-                ) return@forEach
-                if (view.paddingBottom == inset) {
-                    originalContentPaddings.putIfAbsent(view, intArrayOf(
-                        view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom
-                    ))
-                    view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, 0)
-                }
-                val params = view.layoutParams as? ViewGroup.MarginLayoutParams ?: return@forEach
-                if (params.bottomMargin == inset) {
-                    originalContentBottomMargins.putIfAbsent(view, params.bottomMargin)
-                    params.bottomMargin = 0
-                    view.layoutParams = params
-                }
             }
         }
 
