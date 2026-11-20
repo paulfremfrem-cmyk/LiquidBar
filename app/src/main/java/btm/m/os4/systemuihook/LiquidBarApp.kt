@@ -172,6 +172,21 @@ fun LiquidBarApp() {
                 item {
                     SmallTitle(text = "GÉOMÉTRIE & MATÉRIAU")
                     Card(modifier = Modifier.fillMaxWidth()) {
+                        val hideGestureBar = remember(prefRevision) {
+                            store.preferences.getBoolean(KEY_HIDE_GLOBAL_GESTURE_HANDLE, false)
+                        }
+                        SwitchPreference(
+                            checked = hideGestureBar,
+                            onCheckedChange = { active ->
+                                store.edit(service) {
+                                    putBoolean(KEY_HIDE_GLOBAL_GESTURE_HANDLE, active)
+                                }
+                                prefRevision++
+                            },
+                            title = "Masquer l'indicateur de gestes HyperOS",
+                            summary = "Rend la barre blanche de navigation système totalement invisible et transparente",
+                        )
+
                         val globalOffset = remember(prefRevision) {
                             NavigationOffsetSettings.load(store.preferences)
                         }
@@ -186,7 +201,7 @@ fun LiquidBarApp() {
 
                         OverlayDropdownPreference(
                             title = "Décalage vertical du bas",
-                            summary = "Ajuste l'élévation de la capsule au-dessus de la barre de gestes",
+                            summary = "Ajuste l'élévation de la capsule au-dessus du bas de l'écran",
                             items = offsetLabels,
                             selectedIndex = currentOffsetIndex,
                             onSelectedIndexChange = { idx ->

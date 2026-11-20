@@ -761,7 +761,10 @@ object AppBottomNavHooks {
         colorMode: String,
         accentColor: Int = 0,
         showBadges: Boolean = true
-    ) = install(module, loader, whatsapp, blurRadius, labelMode, navigationStyle, advancedMaterial, colorMode, accentColor, showBadges = showBadges)
+    ) {
+        ImmersiveNavigationHooks.install(module)
+        install(module, loader, whatsapp, blurRadius, labelMode, navigationStyle, advancedMaterial, colorMode, accentColor, showBadges = showBadges)
+    }
 
     @JvmStatic
     @Throws(ReflectiveOperationException::class)
@@ -2696,6 +2699,8 @@ object AppBottomNavHooks {
                 val home = findResourceView(content, "tabView") ?: return
                 val pager = findResourceView(home, "viewPager") as? ViewGroup ?: return
                 releaseTencentMeetingPageNavigationInset(pager)
+            } else if (config === whatsapp) {
+                releaseWhatsAppPageNavigationInset(content)
             } else if (config === wechat) {
                 releaseWeChatPageNavigationInset(content)
             } else if (config === qq) {
@@ -3064,6 +3069,28 @@ object AppBottomNavHooks {
             val miniFab = findResourceView(content, "extended_mini_fab")
             if (miniFab != null && miniFab.translationY != fabOffset) {
                 miniFab.translationY = fabOffset
+            }
+        }
+
+        private fun releaseWhatsAppPageNavigationInset(content: ViewGroup) {
+            val inset = navigationBarInset()
+            if (inset <= 0) return
+            descendants(content).forEach { view ->
+                if (!view.isShown || view is ComposeView || view === originalBar ||
+                    view.height < inset * 4 || view.width < content.width * 3 / 4
+                ) return@forEach
+                if (view.paddingBottom == inset) {
+                    originalContentPaddings.putIfAbsent(view, intArrayOf(
+                        view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom
+                    ))
+                    view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, 0)
+                }
+                val params = view.layoutParams as? ViewGroup.MarginLayoutParams ?: return@forEach
+                if (params.bottomMargin == inset) {
+                    originalContentBottomMargins.putIfAbsent(view, params.bottomMargin)
+                    params.bottomMargin = 0
+                    view.layoutParams = params
+                }
             }
         }
 

@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import btm.m.os4.systemuihook.ModuleLog as Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.Window
 import android.view.WindowManager
@@ -219,12 +220,19 @@ object ImmersiveNavigationHooks {
         }
     }
 
-    private fun isImmersiveWindow(window: Window): Boolean = synchronized(immersiveWindows) {
-        immersiveWindows.containsKey(window)
+    private fun isImmersiveWindow(window: Window): Boolean {
+        if (synchronized(immersiveWindows) { immersiveWindows.containsKey(window) }) return true
+        val context = window.context
+        val activity = context as? Activity
+            ?: (context as? android.content.ContextWrapper)?.baseContext as? Activity
+        val pkg = activity?.packageName ?: context.packageName
+        return pkg == "com.whatsapp" || pkg == "com.android.vending" || pkg == "com.google.android.gm"
     }
 
-    private fun isImmersiveContent(view: View): Boolean = synchronized(immersiveWindows) {
-        immersiveWindows.keys.any { window -> view.rootView === window.decorView }
+    private fun isImmersiveContent(view: View): Boolean {
+        if (synchronized(immersiveWindows) { immersiveWindows.keys.any { window -> view.rootView === window.decorView } }) return true
+        val pkg = view.context.packageName
+        return pkg == "com.whatsapp" || pkg == "com.android.vending" || pkg == "com.google.android.gm"
     }
 
     private fun applyImmersiveNavigation(activity: Activity) {
@@ -236,12 +244,8 @@ object ImmersiveNavigationHooks {
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         enforceEdgeToEdgePrivateFlag(window)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        if (window.navigationBarColor != Color.TRANSPARENT) {
-            window.navigationBarColor = Color.TRANSPARENT
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P &&
-            window.navigationBarDividerColor != Color.TRANSPARENT
-        ) {
+        window.navigationBarColor = Color.TRANSPARENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             window.navigationBarDividerColor = Color.TRANSPARENT
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -266,13 +270,32 @@ object ImmersiveNavigationHooks {
     fun clearNavigationBackgrounds(activity: Activity) {
         val decor = activity.window.decorView
         decor.findViewById<View?>(android.R.id.navigationBarBackground)?.let { background ->
-            if (background.alpha != 0f) background.alpha = 0f
+            background.alpha = 0f
             makeBackgroundTransparent(background)
         }
         hostNavigationBackgroundNames.forEach { name ->
             val id = activity.resources.getIdentifier(name, "id", activity.packageName)
             if (id != 0) {
                 decor.findViewById<View?>(id)?.let(::makeBackgroundTransparent)
+            }
+            val sysId = activity.resources.getIdentifier(name, "id", "android")
+            if (sysId != 0) {
+                decor.findViewById<View?>(sysId)?.let(::makeBackgroundTransparent)
+            }
+        }
+        (decor as? ViewGroup)?.let { group ->
+            for (i in 0 until group.childCount) {
+                val child = group.getChildAt(i)
+                val idName: String? = if (child.id != View.NO_ID) {
+                    runCatching { child.resources.getResourceEntryName(child.id) }.getOrNull()
+                } else null
+                val className = child.javaClass.simpleName
+                if (idName?.contains("navigation", ignoreCase = true) == true ||
+                    className.contains("NavigationBar", ignoreCase = true)
+                ) {
+                    child.alpha = 0f
+                    makeBackgroundTransparent(child)
+                }
             }
         }
     }

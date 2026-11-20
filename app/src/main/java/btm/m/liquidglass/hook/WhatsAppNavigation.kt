@@ -40,11 +40,17 @@ internal object WhatsAppNavigation {
 
         // Immediately conceal the original bar and its container so it never flashes on screen
         bar.alpha = 0f
+        bar.background = null
+        if (bar is ViewGroup) bar.setWillNotDraw(true)
         val parent = bar.parent as? View
         parent?.alpha = 0f
+        parent?.background = null
+        if (parent is ViewGroup) parent.setWillNotDraw(true)
         (parent?.parent as? View)?.let { container ->
             if (container.id != View.NO_ID && runCatching { container.resources.getResourceEntryName(container.id) }.getOrNull() == "bottom_nav_container") {
                 container.alpha = 0f
+                container.background = null
+                if (container is ViewGroup) container.setWillNotDraw(true)
             }
         }
 
