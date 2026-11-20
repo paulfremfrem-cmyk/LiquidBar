@@ -1,0 +1,5 @@
+minApiVersion=102
+targetApiVersion=102
+staticScope=true
+autoHotReload=true
+description=Floating Liquid Capsule Bar for WhatsApp, Play Store & Gmail.

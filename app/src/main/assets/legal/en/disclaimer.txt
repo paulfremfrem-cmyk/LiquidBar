@@ -1,0 +1,40 @@
+HyperChanger Disclaimer
+
+Effective date: November 1, 2026
+Last revised: November 13, 2026
+
+Before using HyperChanger, back up your important data and make sure you know how to disable modules in your framework and recover your device. Xposed modules modify system and app behavior at runtime, and stable operation cannot be guaranteed in all scenarios even on supported HyperOS 4 devices.
+
+## 1. Independent Project and Compatibility
+
+1.1 HyperChanger is an independent third-party open-source project with no official authorization, partnership, or affiliation with Xiaomi or its affiliates. It does not replace official system updates, warranties, or technical support.
+
+1.2 This module is primarily developed and tested for specific HyperOS 4 (Android 17) builds. Differences in security patches, target app versions, other modules, or scope configurations may affect behavior. Do not force-enable the module on unsupported systems.
+
+## 2. Potential Risks
+
+2.1 System and App Stability: Enabling certain hooks may cause System UI, the launcher, Settings, or target apps to lag or crash, or cause notifications, Control Center, the lockscreen, media, or navigation bars to malfunction. In severe cases, the device may fail to boot or enter a bootloop.
+
+2.2 Data and Device Recovery: System failures and subsequent recovery, flashing, or wiping operations may result in data loss. Always keep backups in a reliable location outside the device; maintainers cannot recover unbacked-up data.
+
+2.3 Power, Heat, and Display Impact: Advanced blur, continuous animations, always-on displays, and high-frequency rendering may increase heat and battery consumption. Displaying static elements in a fixed area for extended periods may also increase the risk of screen burn-in. Actual impact varies by device, settings, and usage habits.
+
+2.4 Security and Official Services: Unlocking the bootloader and granting root access may affect device security, system integrity checks, banking or payment apps, and official warranty policies. Specific consequences depend on the device manufacturer, service providers, and applicable laws.
+
+## 3. As-Is Provision and Limitation of Liability
+
+3.1 The software and related documentation are provided "AS IS" and "AS AVAILABLE." To the extent permitted by applicable law, the author and contributors make no express or implied warranties regarding error-free operation, uninterrupted availability, fitness for a particular purpose, or compatibility with future system versions.
+
+3.2 To the extent permitted by applicable law, the author and contributors are not liable for any device damage, data loss, downtime, or other direct or indirect losses resulting from the use, misuse, or inability to use this software. This Disclaimer does not limit rights granted to you under open-source licenses or mandatory laws.
+
+## 4. Third-Party Services and External Content
+
+4.1 Online lyrics, album artwork, transit images, cloud rules, shutter sounds, device presets, and update metadata are provided by external platforms or hosted repositories. Maintainers have no control over their availability, accuracy, copyright status, or privacy practices; API changes, rate limits, or service shutdowns may render related features unavailable.
+
+4.2 Displaying or accessing third-party resources does not constitute a warranty or endorsement by the developers. Please verify download sources and content permissions yourself and comply with the rules of the respective platforms.
+
+## 5. Issue Reporting and Redaction
+
+5.1 When reporting an issue on GitHub, please include your device model, exact system version, module version, enabled scopes, reproduction steps, and exported logs (environment.txt and diagnostic logs in the exported ZIP help pinpoint issues). Due to limited resources, fixed repair timelines or per-device adaptations are not promised.
+
+5.2 Logs and screenshots may contain notification text, app package names, account details, phone numbers, or location records. Always review and redact sensitive personal information before submitting issues publicly or sharing them with others.
