@@ -22,7 +22,7 @@ android {
 
 
     defaultConfig {
-        applicationId = "btm.m.os4.systemuihook"
+        applicationId = "btm.m.liquidbar"
         minSdk = 35
         targetSdk = 37
         versionCode = 1020239

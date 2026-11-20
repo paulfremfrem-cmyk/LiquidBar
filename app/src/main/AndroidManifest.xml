@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-sdk tools:overrideLibrary="top.yukonga.miuix.kmp.blur" />
-    <permission android:name="btm.m.os4.systemuihook.permission.LAUNCH_REAR_MINI_PLAYER"
+    <permission android:name="${applicationId}.permission.LAUNCH_REAR_MINI_PLAYER"
         android:protectionLevel="signature" />
-    <uses-permission android:name="btm.m.os4.systemuihook.permission.LAUNCH_REAR_MINI_PLAYER" />
+    <uses-permission android:name="${applicationId}.permission.LAUNCH_REAR_MINI_PLAYER" />
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
@@ -87,16 +87,16 @@
         </service>
         <provider
             android:name=".SettingsAppearanceProvider"
-            android:authorities="btm.m.os4.systemuihook.settingsappearance"
+            android:authorities="${applicationId}.settingsappearance"
             android:exported="true"
             android:grantUriPermissions="true" />
         <provider
             android:name=".SettingsEntryIconProvider"
-            android:authorities="btm.m.os4.systemuihook.settingsentryicons"
+            android:authorities="${applicationId}.settingsentryicons"
             android:exported="true" />
         <provider
             android:name=".StatusBarIconProvider"
-            android:authorities="btm.m.os4.systemuihook.statusbaricons"
+            android:authorities="${applicationId}.statusbaricons"
             android:exported="true" />
         <provider
             android:name=".PortalOcrProvider"
@@ -104,11 +104,11 @@
             android:exported="true" />
         <provider
             android:name=".DockMaterialProvider"
-            android:authorities="btm.m.os4.systemuihook.dockmaterial"
+            android:authorities="${applicationId}.dockmaterial"
             android:exported="true" />
         <provider
             android:name=".RearScreenshotShellProvider"
-            android:authorities="btm.m.os4.systemuihook.rearscreenshot.shells"
+            android:authorities="${applicationId}.rearscreenshot.shells"
             android:exported="true" />
         <provider
             android:name=".PersonalAssistantBackgroundProvider"
