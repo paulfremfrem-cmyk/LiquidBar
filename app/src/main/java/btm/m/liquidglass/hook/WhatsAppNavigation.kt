@@ -35,7 +35,8 @@ internal object WhatsAppNavigation {
                     val resName = if (v.id != View.NO_ID) {
                         runCatching { v.resources.getResourceEntryName(v.id) }.getOrNull()
                     } else null
-                    name.contains("WDSBottomBar") || resName == "bottom_nav"
+                    name.contains("WDSBottomBar") || name.contains("BottomNavigationView") ||
+                    resName == "bottom_nav" || resName == "bottom_navigation"
                 } ?: return null
 
         // Immediately conceal the original bar and its container so it never flashes on screen

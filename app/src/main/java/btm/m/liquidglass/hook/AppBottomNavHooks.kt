@@ -1513,8 +1513,8 @@ object AppBottomNavHooks {
             val content = activity.findViewById<FrameLayout>(android.R.id.content) ?: return
             val detected = detectBottomBar(content)
             if (detected == null) {
-                val delay = if (config === whatsapp || config.isGmail) 16L else 300L
-                if (++attempts < 100) content.postDelayed(::attachOrRetry, delay)
+                val delay = if (config === whatsapp || config.isGmail) 100L else 300L
+                if (++attempts < 300) content.postDelayed(::attachOrRetry, delay)
                 else {
                     detachAttachListener()
                     btm.m.os4.systemuihook.HookModuleLogger.log(module, Log.WARN, TAG, "No ${config.displayName} bottom navigation found")
@@ -1601,6 +1601,7 @@ object AppBottomNavHooks {
                     translationY = -verticalOffsetDp * activity.resources.displayMetrics.density
                     owner.attachTo(this)
                     setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                    importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
                     setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
                     setContent {
                         val currentNavigationTabs = navigationTabs
@@ -1699,7 +1700,7 @@ object AppBottomNavHooks {
                                     config.packageName == InstagramNavigation.PACKAGE || config === pinterest,
                                 softBackdropShadow = config === tencentMeeting,
                                 suppressFloatingShadow = config === whatsapp,
-                                liquidBottomSpacingDp = if (config === xiaomiWallet) -8 else 8,
+                                liquidBottomSpacingDp = if (config === xiaomiWallet) -8 else if (config === whatsapp) -16 else 8,
                                 liquidBarWidthFraction = 1f,
                                 liquidBarAlignment = androidx.compose.ui.Alignment.BottomCenter,
                                 concealHostBottomBar = config.concealHostBottomBar ||
@@ -3061,7 +3062,7 @@ object AppBottomNavHooks {
 
         private fun offsetWhatsAppFabs(content: ViewGroup) {
             val density = content.resources.displayMetrics.density
-            val fabOffset = -(72f * density)
+            val fabOffset = -(16f * density)
             val fab = findResourceView(content, "fab")
             if (fab != null && fab.translationY != fabOffset) {
                 fab.translationY = fabOffset

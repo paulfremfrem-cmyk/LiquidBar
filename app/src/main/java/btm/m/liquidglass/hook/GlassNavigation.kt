@@ -321,6 +321,7 @@ internal fun CustomNavigation(
                 softBackdropShadow = softBackdropShadow,
                 dimensionScale = scale,
                 opaqueFloatingBar = opaqueFloatingBar,
+                bottomSpacingDp = liquidBottomSpacingDp,
             )
         }
         return@CompositionLocalProvider
@@ -338,8 +339,9 @@ internal fun CustomNavigation(
                 start = 14.dp,
                 end = 14.dp,
                 top = 6.dp,
-                bottom = liquidBottomSpacingDp.dp
+                bottom = liquidBottomSpacingDp.coerceAtLeast(0).dp
             )
+            .offset(y = if (liquidBottomSpacingDp < 0) (-liquidBottomSpacingDp).dp else 0.dp)
         if (trailingAction == null) Box(liquidModifier) {
             LiquidBottomTabs(
                 selectedTabIndex = { selectedIndex.intValue.coerceIn(0, tabs.lastIndex) },
@@ -1105,6 +1107,7 @@ private fun HyperNavigation(
     softBackdropShadow: Boolean = false,
     dimensionScale: NavigationScaleSettings.Settings = NavigationScaleSettings.Settings(),
     opaqueFloatingBar: Boolean = false,
+    bottomSpacingDp: Int = 8,
 ) {
     val controller = remember(hostIsDarkTheme) {
         ThemeController(
@@ -1143,6 +1146,7 @@ private fun HyperNavigation(
                     enableDrag = style != NavigationStyle.HARMONY_OS_FLOATING,
                     tabImageVector = tabImageVector,
                     tabIconContent = tabIconContent,
+                    bottomSpacingDp = bottomSpacingDp,
                     onTabSelected = { index ->
                         view.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
                         tabs[index].onClick()
@@ -1152,7 +1156,8 @@ private fun HyperNavigation(
                     Modifier
                         .align(Alignment.BottomCenter)
                         .navigationBarsPadding()
-                        .padding(start = 14.dp, end = 14.dp, bottom = 6.dp)
+                        .padding(start = 14.dp, end = 14.dp, bottom = (bottomSpacingDp - 2).coerceAtLeast(0).dp)
+                        .offset(y = if (bottomSpacingDp < 0) (-bottomSpacingDp).dp else 0.dp)
                         .floatingNavigationWidth(1f, dimensionScale.widthFactor)
                         .height(72.dp * 0.82f * dimensionScale.heightFactor),
                     horizontalArrangement = Arrangement.spacedBy(8.dp * dimensionScale.widthFactor),
@@ -1179,6 +1184,7 @@ private fun HyperNavigation(
                         enableDrag = style != NavigationStyle.HARMONY_OS_FLOATING,
                         tabImageVector = tabImageVector,
                         tabIconContent = tabIconContent,
+                        bottomSpacingDp = bottomSpacingDp,
                         modifier = Modifier.weight(1f),
                         fillAvailableWidth = true,
                         onTabSelected = { index ->
@@ -1408,6 +1414,7 @@ private fun HyperFloatingNavigationBar(
     modifier: Modifier = Modifier,
     fillAvailableWidth: Boolean = false,
     opaqueFloatingBar: Boolean = false,
+    bottomSpacingDp: Int = 8,
     onTabSelected: (Int) -> Unit,
 ) {
     val material = LocalNavigationMaterial.current
@@ -1513,7 +1520,8 @@ private fun HyperFloatingNavigationBar(
     } else {
         modifier.floatingNavigationWidth(widthFraction, dimensionScale.widthFactor)
             .navigationBarsPadding()
-            .padding(bottom = 8.dp * floatingScale)
+            .padding(bottom = bottomSpacingDp.coerceAtLeast(0).dp * floatingScale)
+            .offset(y = if (bottomSpacingDp < 0) ((-bottomSpacingDp).dp * floatingScale) else 0.dp)
             .height(72.dp * floatingScale * dimensionScale.heightFactor)
     }
     BoxWithConstraints(
